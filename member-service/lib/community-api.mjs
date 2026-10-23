@@ -1,4 +1,5 @@
 import { randomBytes, randomUUID, scryptSync, timingSafeEqual, createHash } from 'node:crypto';
+import {emailEnabled,emailReady,sendAccountMail} from './account-mail.mjs';
 const AGE=14*86400, COOKIE='drugslist_member', CATEGORIES=new Set(['price','effect','other']);
 const hash=s=>createHash('sha256').update(s).digest('hex');
 const random=()=>randomBytes(32).toString('base64url');
@@ -33,10 +34,10 @@ export async function summaries(db,drugId){
 async function getSession(db,request){
  const token=request.headers.get('cookie')?.split(';').map(v=>v.trim()).find(v=>v.startsWith(COOKIE+'='))?.slice(COOKIE.length+1)||'';
  if(!/^[A-Za-z0-9_-]{43}$/.test(token))return null;
- return await db.prepare('SELECT s.*,u.email,u.display_name FROM sessions s JOIN users u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at>?').bind(hash(token),now()).first();
+ return await db.prepare('SELECT s.*,u.email,u.display_name,u.email_verified_at FROM sessions s JOIN users u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at>?').bind(hash(token),now()).first();
 }
 async function requireUser(db,request){const s=await getSession(db,request);if(!s)throw new APIError(401,'请先登录会员账号。');if(!safeEqual(request.headers.get('x-csrf-token'),s.csrf))throw new APIError(403,'登录状态校验失败，请刷新后重试。');return s;}
-function publicAccount(s){return s?{id:s.user_id,email:s.email,display_name:s.display_name}:null;}
+function publicAccount(s){return s?{id:s.user_id,email:s.email,display_name:s.display_name,email_verified:!!s.email_verified_at}:null;}
 async function throttle(db,key,limit,seconds){
  const bucket=hash(`${key}:${Math.floor(now()/seconds)}`);
  const row=await db.prepare('INSERT INTO rate_limits (bucket,hits,expires_at) VALUES (?,1,?) ON CONFLICT(bucket) DO UPDATE SET hits=hits+1 RETURNING hits').bind(bucket,now()+seconds*2).first();
@@ -44,12 +45,29 @@ async function throttle(db,key,limit,seconds){
 }
 async function newSession(db,request,user){
  const old=await getSession(db,request);const token=random(),csrf=random();
- const work=[db.prepare('DELETE FROM sessions WHERE expires_at<=?').bind(now()),db.prepare('DELETE FROM rate_limits WHERE expires_at<=?').bind(now()),db.prepare('INSERT INTO sessions(token_hash,user_id,csrf,expires_at) VALUES (?,?,?,?)').bind(hash(token),user.id,csrf,now()+AGE)];
- if(old)work.push(db.prepare('DELETE FROM sessions WHERE token_hash=?').bind(old.token_hash));await db.batch(work);
+ const work=[db.prepare('DELETE FROM sessions WHERE expires_at<=?').bind(now()),db.prepare('DELETE FROM rate_limits WHERE expires_at<=?').bind(now()),db.prepare('INSERT INTO sessions(token_hash,user_id,csrf,expires_at) SELECT ?,id,?,? FROM users WHERE id=? AND password_hash=?').bind(hash(token),csrf,now()+AGE,user.id,user.password_hash)];
+ if(old)work.push(db.prepare('DELETE FROM sessions WHERE token_hash=?').bind(old.token_hash));const result=await db.batch(work);
+ if(result[2].meta.changes!==1)throw new APIError(401,'账号状态已更新，请重新登录。');
  const secure=new URL(request.url).protocol==='https:'?'; Secure':'';
- return [{user:{id:user.id,email:user.email,display_name:user.display_name},csrf},`${COOKIE}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${AGE}${secure}`];
+ return [{user:{id:user.id,email:user.email,display_name:user.display_name,email_verified:!!user.email_verified_at},csrf},`${COOKIE}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${AGE}${secure}`];
 }
-export async function handleAPI(request,db,drugIds){
+async function issueAccountToken(db,user,purpose,sendMail){
+ const token=random(),tokenHash=hash(token);
+ await db.batch([
+  db.prepare('DELETE FROM account_tokens WHERE expires_at<=?').bind(now()),
+  db.prepare('DELETE FROM account_tokens WHERE user_id=? AND purpose=?').bind(user.id,purpose),
+  db.prepare('INSERT INTO account_tokens(token_hash,user_id,purpose,credential_hash,expires_at) VALUES (?,?,?,?,?)').bind(tokenHash,user.id,purpose,user.password_hash,now()+(purpose==='verify'?86400:1800)),
+ ]);
+ try{await sendMail({email:user.email,purpose,token,deliveryId:randomUUID()});}
+ catch(error){await db.prepare('DELETE FROM account_tokens WHERE token_hash=?').bind(tokenHash).run();throw error;}
+}
+function validatePassword(password){if(typeof password!=='string'||password.length<10||password.length>128)throw new APIError(400,'密码须为10–128位。');}
+export async function handleAPI(request,db,drugIds,options={}){
+ const env=options.env||{},enabled=emailEnabled(env),ready=emailReady(env);
+ const mailState={email_verification_required:enabled,email_delivery_available:ready};
+ const sendMail=message=>sendAccountMail(env,message,options.fetcher||fetch);
+ const requireMail=()=>{if(!ready)throw new APIError(503,'邮件服务暂不可用，请稍后重试。');};
+ const background=async task=>{const work=task.catch(()=>console.error('Account email delivery failed'));if(options.waitUntil)options.waitUntil(work);else await work;};
  const url=new URL(request.url),path=url.pathname,method=request.method,origin=request.headers.get('origin');
  const headers={'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin'};
  const publicRead=method==='GET'&&['/api/reviews','/api/review-summaries','/api/health'].includes(path);
@@ -57,25 +75,66 @@ export async function handleAPI(request,db,drugIds){
  const response=(data,status=200,cookie)=>new Response(JSON.stringify(data),{status,headers:{...headers,...(cookie?{'Set-Cookie':cookie}:{})}});
  try{
   if(method!=='GET'&&origin!==url.origin)throw new APIError(403,'请求来源不匹配。');
-  if(path==='/api/health'&&method==='GET'){await db.prepare('SELECT 1 FROM users LIMIT 1').first();return response({ok:true,storage:'D1',email_registration:true,ai_connected:false});}
-  if(path==='/api/session'&&method==='GET'){const s=await getSession(db,request);return response({user:publicAccount(s),csrf:s?.csrf||null});}
+  if(path==='/api/health'&&method==='GET'){await db.prepare('SELECT 1 FROM users LIMIT 1').first();return response({ok:true,storage:'D1',email_registration:true,...mailState,ai_connected:false});}
+  if(path==='/api/session'&&method==='GET'){const s=await getSession(db,request);return response({user:publicAccount(s),csrf:s?.csrf||null,...mailState});}
+  if(path==='/api/auth/forgot-password'&&method==='POST'){
+   requireMail();const ip=request.headers.get('cf-connecting-ip')||'local';await throttle(db,'recovery:'+ip,15,3600);
+   const data=await body(request),email=String(data.email||'').trim().toLowerCase();
+   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||email.length>254)throw new APIError(400,'请填写有效邮箱。');
+   await throttle(db,'mail-minute:'+email,1,60);await throttle(db,'mail-hour:'+email,5,3600);
+   // Identical public response and asynchronous lookup/delivery avoid an account-existence oracle.
+   await background((async()=>{const user=await db.prepare('SELECT * FROM users WHERE email=?').bind(email).first();if(user)await issueAccountToken(db,user,'reset',sendMail);})());
+   return response({ok:true,message:'如果该邮箱已注册，会收到重置链接。请查看收件箱及垃圾邮件；一分钟后可重新申请。'},202);
+  }
+  if(path==='/api/auth/resend-verification'&&method==='POST'){
+   requireMail();const s=await requireUser(db,request);
+   if(s.email_verified_at)return response({ok:true,message:'邮箱已验证。'});
+   await throttle(db,'mail-minute:'+s.email,1,60);await throttle(db,'mail-hour:'+s.email,5,3600);
+   const user=await db.prepare('SELECT * FROM users WHERE id=?').bind(s.user_id).first();
+   try{await issueAccountToken(db,user,'verify',sendMail);}catch{throw new APIError(503,'验证邮件暂未发送成功，请一分钟后重试。');}
+   return response({ok:true,message:'验证邮件已提交发送，请查看收件箱及垃圾邮件。'},202);
+  }
+  if(['/api/auth/verify-email','/api/auth/reset-password'].includes(path)&&method==='POST'){
+   const ip=request.headers.get('cf-connecting-ip')||'local';await throttle(db,'consume:'+ip,30,900);
+   const data=await body(request),purpose=path.endsWith('verify-email')?'verify':'reset';
+   if(typeof data.token!=='string'||!/^[A-Za-z0-9_-]{43}$/.test(data.token))throw new APIError(400,'链接无效或已过期，请重新申请邮件。');
+   validatePassword(data.password);
+   if(purpose==='reset'&&data.password!==data.password_confirmation)throw new APIError(400,'两次输入的密码不一致。');
+   const tokenHash=hash(data.token),user=await db.prepare('SELECT u.* FROM account_tokens t JOIN users u ON u.id=t.user_id WHERE t.token_hash=? AND t.purpose=? AND t.consumed_by IS NULL AND t.expires_at>? AND t.credential_hash=u.password_hash').bind(tokenHash,purpose,now()).first();
+   if(!user)throw new APIError(400,'链接无效或已过期，请重新申请邮件。');
+   // Requiring the registration password stops an attacker pre-registering somebody else's email.
+   if(purpose==='verify'&&!passwordMatches(data.password,user.password_hash))throw new APIError(400,'请输入注册时设置的密码；忘记密码可申请重置邮件。');
+   const claim=randomUUID(),password=purpose==='reset'?passwordHash(data.password):user.password_hash;
+   // A D1 batch is atomic: claim exactly once, change credentials, then revoke all sessions/tokens.
+   const result=await db.batch([
+    db.prepare('UPDATE account_tokens SET consumed_by=? WHERE token_hash=? AND purpose=? AND consumed_by IS NULL AND expires_at>? AND credential_hash=(SELECT password_hash FROM users WHERE id=account_tokens.user_id)').bind(claim,tokenHash,purpose,now()),
+    db.prepare('UPDATE users SET password_hash=?,email_verified_at=COALESCE(email_verified_at,?) WHERE id=(SELECT user_id FROM account_tokens WHERE token_hash=? AND consumed_by=?)').bind(password,now(),tokenHash,claim),
+    db.prepare('DELETE FROM sessions WHERE user_id=(SELECT user_id FROM account_tokens WHERE token_hash=? AND consumed_by=?)').bind(tokenHash,claim),
+    db.prepare('UPDATE account_tokens SET consumed_by=? WHERE consumed_by IS NULL AND user_id=(SELECT user_id FROM account_tokens WHERE token_hash=? AND consumed_by=?)').bind(claim,tokenHash,claim),
+   ]);
+   if(result[0].meta.changes!==1)throw new APIError(400,'链接无效或已过期，请重新申请邮件。');
+   if(purpose==='reset'&&ready)await background(sendMail({email:user.email,purpose:'changed',deliveryId:randomUUID()}));
+   return response({ok:true,message:purpose==='verify'?'邮箱验证成功，请登录。':'密码已重置，所有旧登录会话已退出。请使用新密码登录。'},200,`${COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${url.protocol==='https:'?'; Secure':''}`);
+  }
   if(['/api/auth/register','/api/auth/login'].includes(path)&&method==='POST'){
    const ip=request.headers.get('cf-connecting-ip')||'local';await throttle(db,'auth:'+ip,35,900);
    const data=await body(request),email=String(data.email||'').trim().toLowerCase(),password=data.password;
    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||email.length>254||typeof password!=='string'||password.length<10||password.length>128)throw new APIError(400,'请填写有效邮箱及10–128位密码。');
    await throttle(db,'account:'+email,20,900);
    if(path.endsWith('/register')){
+    if(enabled)requireMail();
     await throttle(db,'register:'+ip,10,3600);
     const display=String(data.display_name||'').trim()||'会员'+randomBytes(3).toString('hex');
     if(display.length>30||/[\u0000-\u001f\u007f]/.test(display))throw new APIError(400,'昵称请控制在30字以内。');
-    const user={id:randomUUID(),email,display_name:display};const password_hash=passwordHash(password);
+    const user={id:randomUUID(),email,display_name:display};const password_hash=passwordHash(password);user.password_hash=password_hash;
     try{await db.prepare('INSERT INTO users(id,email,display_name,password_hash,created_at) VALUES (?,?,?,?,?)').bind(user.id,email,display,password_hash,now()).run();}catch(error){if(String(error).includes('UNIQUE'))throw new APIError(409,'此邮箱已有账号，请登录。');throw error;}
-    const [payload,cookie]=await newSession(db,request,user);return response(payload,201,cookie);
+    let email_delivery=null;if(ready){try{await throttle(db,'mail-minute:'+email,1,60);await throttle(db,'mail-hour:'+email,5,3600);await issueAccountToken(db,user,'verify',sendMail);email_delivery='submitted';}catch{email_delivery='failed';}}
+    const [payload,cookie]=await newSession(db,request,user);return response({...payload,...mailState,email_delivery},201,cookie);
    }
    const user=await db.prepare('SELECT * FROM users WHERE email=?').bind(email).first();
    const valid=passwordMatches(password,user?.password_hash||'scrypt:32768:8:3:00000000000000000000000000000000:0000000000000000000000000000000000000000000000000000000000000000');
    if(!user||!valid)throw new APIError(401,'邮箱或密码不正确。');
-   const [payload,cookie]=await newSession(db,request,user);return response(payload,200,cookie);
+   const [payload,cookie]=await newSession(db,request,user);return response({...payload,...mailState},200,cookie);
   }
   if(path==='/api/auth/logout'&&method==='POST'){const s=await requireUser(db,request);await db.prepare('DELETE FROM sessions WHERE token_hash=?').bind(s.token_hash).run();return response({ok:true},200,`${COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${url.protocol==='https:'?'; Secure':''}`);}
   if(path==='/api/review-summaries'&&method==='GET')return response({summaries:await summaries(db)});
@@ -96,7 +155,7 @@ export async function handleAPI(request,db,drugIds){
   const report=path.match(/^\/api\/reviews\/(\d+)\/report$/);
   if(report&&method==='POST'){const s=await requireUser(db,request);await throttle(db,'report:'+s.user_id,20,3600);const row=await db.prepare('SELECT id FROM reviews WHERE id=? AND deleted_at IS NULL').bind(Number(report[1])).first();if(!row)throw new APIError(404,'评价不存在。');const data=await body(request),reason=String(data.reason||'').trim();if(reason.length<2||reason.length>200)throw new APIError(400,'举报原因须为2–200字。');await db.prepare('INSERT INTO reports(review_id,user_id,reason,created_at) VALUES (?,?,?,?) ON CONFLICT(review_id,user_id) DO UPDATE SET reason=excluded.reason,created_at=excluded.created_at').bind(row.id,s.user_id,reason,now()).run();return response({ok:true});}
   if(path.startsWith('/api/reviews/')&&method==='POST'){
-   const s=await requireUser(db,request);await throttle(db,'review:'+s.user_id,30,3600);const drug=decodeURIComponent(path.slice('/api/reviews/'.length));if(!drugIds.has(drug))throw new APIError(404,'未找到该药品。');
+   const s=await requireUser(db,request);if(enabled&&!s.email_verified_at)throw new APIError(403,'请先在会员账号中验证邮箱，再发布评价。');await throttle(db,'review:'+s.user_id,30,3600);const drug=decodeURIComponent(path.slice('/api/reviews/'.length));if(!drugIds.has(drug))throw new APIError(404,'未找到该药品。');
    const data=await body(request),category=data.category,rating=data.rating,text=data.body;
    if(!CATEGORIES.has(category)||rating!==null&&(!Number.isInteger(rating)||rating<1||rating>5))throw new APIError(400,'请选择评价方向及1–5星评分，也可仅留言。');
    if(typeof text!=='string'||text.trim().length<5||text.trim().length>2000)throw new APIError(400,'留言须为5–2000字。');

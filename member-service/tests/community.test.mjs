@@ -1,9 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {DatabaseSync} from 'node:sqlite';
-import {readFileSync} from 'node:fs';
+import {setup} from './support.mjs';
 import {handleAPI} from '../lib/community-api.mjs';
-function setup(){const sql=new DatabaseSync(':memory:');sql.exec(readFileSync(new URL('../drizzle/0000_mushy_justin_hammer.sql',import.meta.url),'utf8'));const db={prepare(query){const statement=sql.prepare(query);return {bind(...args){return {async first(){return statement.get(...args)||null;},async all(){return {results:statement.all(...args)};},async run(){return statement.run(...args);}};},async first(){return statement.get()||null;}};},async batch(statements){sql.exec('BEGIN');try{for(const st of statements)await st.run();sql.exec('COMMIT');}catch(e){sql.exec('ROLLBACK');throw e;}}};return {db,sql};}
 test('email registration, authentication, unique-person ratings, filtering and ownership',async()=>{
  const {db,sql}=setup(),ids=new Set(['drug-a','drug-b']),base='https://members.example',clients=[{}, {}, {}];
  async function req(client,path,method='GET',body,extra={}){const c=clients[client];const headers={Origin:base,...(body?{'Content-Type':'application/json'}:{}),...(c.cookie?{Cookie:c.cookie}:{}),...(c.csrf?{'X-CSRF-Token':c.csrf}:{}),...extra};const response=await handleAPI(new Request(base+path,{method,headers,body:body?JSON.stringify(body):undefined}),db,ids);const data=await response.json();if(response.headers.get('set-cookie'))c.cookie=response.headers.get('set-cookie').split(';')[0];if(data.csrf)c.csrf=data.csrf;return {status:response.status,data,headers:response.headers};}
