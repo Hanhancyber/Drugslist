@@ -8,7 +8,8 @@
 
 ## 在线功能
 
-- 新增 [中国创新药专题](innovation.html)：行业进展、8 个代表药品和 6 家药企，附 23 项原始来源；2025 年财务金额统一折算为 USD。
+- [首页](index.html) 展示使命及药品查询、中国创新药两个入口；[药品查询](drugs.html) 独立保留。旧药品与会员链接兼容跳转。
+- [中国创新药专题](innovation.html)：行业进展、8 个代表药品和 6 家药企，附 27 项原始来源；中美临床管线按来源国比较，中国境内在研总量趋势另按研发发生地展示，注释默认折叠。2025 年财务金额统一折算为 USD。
 - 默认浏览顺序优先展示编辑选取的代表药品，中成药在全部领域及各治疗领域后排。排序不表示销量、疗效或用药推荐等级；代表清单在 `assets/catalog-order.js`。
 
 - 按药名、治疗领域、疾病、药物类别、创新属性、年份和医保搜索筛选，查看逐药详情及来源，导出 CSV。
@@ -44,6 +45,8 @@ node --test tests/community.test.mjs
 python3 scripts/build_site.py
 python3 scripts/build_innovation.py
 ```
+
+首页直接编辑 `index.html` 与 `assets/home.css`。药品构建脚本生成 `drugs.html` 和独立目录，不覆盖首页。
 
 创新药专题的内容和来源保存在 `data/innovation.json`，结构模板为 `scripts/innovation-template.html`。
 

@@ -139,6 +139,30 @@
       "title": "欧盟药品注册簿：LOQTORZI 的已批准适应症",
       "url": "https://ec.europa.eu/health/documents/community-register/html/h1853.htm",
       "date": "核验于 2026-10-23"
+    },
+    {
+      "id": "pipeline25",
+      "title": "Citeline：Pharma R&D Annual Review 2025，图 15 / 17（国家在研管线）",
+      "url": "https://www.citeline.com/-/media/C28F0B5022334A4EAC9B0DDDE55F5737",
+      "date": "2025-01 数据快照"
+    },
+    {
+      "id": "patients",
+      "title": "BeOne：替雷利珠单抗全球累计治疗患者超过 220 万",
+      "url": "https://ir.beonemedicines.com/news/beone-medicines-highlights-rapidly-accelerating-solid-tumor-franchise-at-esmo-2026/72697026-675d-42d7-8e4d-de00838252bc",
+      "date": "2026-10-19"
+    },
+    {
+      "id": "gsk",
+      "title": "GSK：与恒瑞签订最多 12 个项目的合作协议",
+      "url": "https://www.gsk.com/en-gb/media/press-releases/gsk-and-hengrui-pharma-enter-agreements/",
+      "date": "2025-07-28"
+    },
+    {
+      "id": "jpma25",
+      "title": "JPMA 医药产业政策研究所：原创企业来源国临床管线，图 1–2（印刷页 12–13）",
+      "url": "https://www.jpma.or.jp/opir/news/076/c11ljr00000006cs-att/76_2.pdf",
+      "date": "2025-11，数据截至 2025-07"
     }
   ],
   "drugs": [
@@ -395,5 +419,64 @@
         "penpu"
       ]
     }
-  ]
+  ],
+  "pipeline": {
+    "source": "pipeline25",
+    "snapshot": "2025-01",
+    "basis": "按开展研发的国家统计；同一药物可能计入多个国家，并非中国原创药物数量。使用国家趋势章节图15/17，提取时间略晚于报告表3。",
+    "china": [
+      [
+        2015,
+        851
+      ],
+      [
+        2020,
+        2590
+      ],
+      [
+        2021,
+        3295
+      ],
+      [
+        2022,
+        4203
+      ],
+      [
+        2023,
+        5136
+      ],
+      [
+        2024,
+        6119
+      ],
+      [
+        2025,
+        7041
+      ]
+    ],
+    "us2025": 11456
+  },
+  "clinical_comparison": {
+    "snapshot": "2025-07",
+    "source": "jpma25",
+    "china": {
+      "count": 2554,
+      "phase_percent": [
+        50,
+        31,
+        14,
+        6
+      ]
+    },
+    "us": {
+      "count": 2930,
+      "phase_percent": [
+        38,
+        44,
+        14,
+        4
+      ]
+    },
+    "basis": "原创企业总部国家；在美日欧中至少一地处于临床I–III期/申报/注册的成分；不含临床前和已上市。占比为原报告四舍五入值。"
+  }
 }
