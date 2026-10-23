@@ -10,7 +10,7 @@ SOURCE=args.catalog_root or (ROOT.parent if (ROOT.parent/'data/drugs.json').exis
 (ROOT/'generated').mkdir(exist_ok=True)
 (ROOT/'generated/catalog.html').write_text((SOURCE/'index.html').read_text())
 (ROOT/'generated/drug-ids.json').write_text(json.dumps([r['drug_id'] for r in json.loads((SOURCE/'data/drugs.json').read_text())]))
-for asset in ['catalog.js','community.js','community.css']:
+for asset in ['catalog.js','catalog.css','community.js','community.css','medical2china-logo.png']:
  shutil.copyfile(SOURCE/'assets'/asset,ROOT/'public/assets'/asset)
 for asset in ['drugs.csv','prices.csv','sources.csv']:
  shutil.copyfile(SOURCE/'data'/asset,ROOT/'public/data'/asset)
