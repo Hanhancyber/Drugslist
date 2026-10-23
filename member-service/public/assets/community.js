@@ -13,14 +13,39 @@
  }
  captureAccountLink();
  const member=$('memberButton'),auth=$('authDialog');
+ const connectionMessage='会员服务暂时无法连接，请稍后重试。药品查询、说明书、价格与创新药专题仍可正常浏览。';
  async function api(path,options={}){
-  const r=await fetch((remote?communityOrigin:'')+path,{credentials:remote?'omit':'same-origin',...options,headers:{...(options.body?{'Content-Type':'application/json'}:{}),...(session.csrf?{'X-CSRF-Token':session.csrf}:{}),...options.headers}});
-  const data=await r.json().catch(()=>({error:'服务暂不可用，请稍后重试。'}));if(!r.ok)throw new Error(data.error||'请求失败，请稍后重试。');return data;
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);
+  try{
+   const r=await fetch((remote?communityOrigin:'')+path,{credentials:remote?'omit':'same-origin',...options,signal:controller.signal,headers:{...(options.body?{'Content-Type':'application/json'}:{}),...(session.csrf?{'X-CSRF-Token':session.csrf}:{}),...options.headers}});
+   if(!r.headers.get('content-type')?.includes('application/json'))throw new Error(connectionMessage);
+   const data=await r.json();if(!r.ok)throw new Error(data.error||'请求失败，请稍后重试。');return data;
+  }catch(error){if(error.name==='AbortError'||error instanceof TypeError)throw new Error(connectionMessage);throw error;}
+  finally{clearTimeout(timer);}
  }
  function memberState(){member.textContent=session.user?`${session.user.display_name} · 会员`:'邮箱注册 / 登录';member.disabled=false;$('memberStatus').textContent=session.user?'分享真实体验，帮助更多人':'注册会员，分享价格与用药体验';}
- function goToMembers(){const url=new URL(communityOrigin);url.searchParams.set('join','1');if(activeDrug)url.searchParams.set('drug',activeDrug);location.assign(url.href);}
+ auth.querySelector('.auth-body').insertAdjacentHTML('beforeend','<section id="memberConnection" hidden><p id="memberConnectionMessage" role="status"></p><div class="review-actions"><button class="btn" id="continueBrowsing">继续浏览药品</button><button class="btn primary" id="retryMemberConnection">重新连接</button></div></section>');
+ $('continueBrowsing').onclick=()=>auth.close();$('retryMemberConnection').onclick=()=>goToMembers();
+ let checkingConnection=false;
+ async function goToMembers(){
+  if(checkingConnection)return;
+  checkingConnection=true;member.disabled=true;member.textContent='正在连接会员服务…';
+  const retry=$('retryMemberConnection');retry.disabled=true;
+  try{
+   const data=await api('/api/review-summaries');
+   if(!data.summaries||typeof data.summaries!=='object')throw new Error(connectionMessage);
+   const url=new URL(communityOrigin);url.searchParams.set('join','1');if(activeDrug)url.searchParams.set('drug',activeDrug);
+   location.assign(url.href);
+  }catch{
+   $('authTitle').textContent='会员服务连接暂不可用';$('authFields').hidden=true;$('accountInfo').hidden=true;$('authError').textContent='';
+   $('memberConnection').hidden=false;$('memberConnectionMessage').textContent=connectionMessage;
+   $('memberStatus').textContent='会员连接暂不可用 · 药品查询正常';
+   if(!auth.open)auth.showModal();
+  }finally{checkingConnection=false;member.disabled=false;member.textContent='邮箱注册 / 登录';retry.disabled=false;}
+ }
  function showAuth(mode='register'){
   if(remote){goToMembers();return;}
+  $('memberConnection').hidden=true;
   authMode=mode;const linkMode=['verify-email','reset-password'].includes(mode),forgot=mode==='forgot-password',account=!!session.user&&!linkMode&&!forgot;
   $('authError').textContent='';$('authTitle').textContent=account?'我的会员账号':({'register':'邮箱注册','login':'欢迎回来','forgot-password':'找回密码','verify-email':'验证你的邮箱','reset-password':'设置新密码'})[mode];$('authFields').hidden=account;$('accountInfo').hidden=!account;
   $('accountName').textContent=session.user?`${session.user.display_name} · ${session.user.email}`:'';
@@ -86,6 +111,7 @@
  memberState();refreshSummaries();
  window.addEventListener('hashchange',()=>{const link=captureAccountLink();if(link&&!remote)showAuth(link.mode);});
  const params=new URLSearchParams(location.search),selected=params.get('drug');if(selected&&DATA.some(r=>r.drug_id===selected))show(selected);
+ if(remote&&params.get('join'))showAuth();
  if(!remote)api('/api/session').then(data=>{session=data;memberState();if(activeDrug){compose();loadReviews();}if(accountLink)showAuth(accountLink.mode);else if(params.get('join')&&!session.user)showAuth('register');}).catch(()=>{$('memberStatus').textContent='会员服务暂不可用，请稍后重试';});
  document.addEventListener('visibilitychange',()=>{if(!remote&&document.visibilityState==='visible'&&session.user&&!accountLink)api('/api/session').then(data=>{session=data;memberState();if(auth.open)showAuth();if(activeDrug)compose();}).catch(()=>{});});
 })();
