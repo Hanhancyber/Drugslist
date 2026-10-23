@@ -43,6 +43,7 @@ function render() {
     && (!$('drugKind').value || r['药物类别']===$('drugKind').value) && (!$('innovation').value || r['创新属性']===$('innovation').value)
     && (!q || [r['中文通用名'],r['英文通用名'],r['商品名'],r['企业/上市许可持有人'],r['获批适应症/功能主治'],r['适应症详细说明'],r['机制/靶点'],r['疾病小类'],r['药物类别'],r['创新属性']].join(' ').toLowerCase().includes(q))
     && (!ins || (ins==='national' ? r['医保状态'].startsWith('已纳入国家') : ins==='commercial' ? r['医保状态'].startsWith('未纳入基本') : r['医保状态'].includes('待人工'))));
+  filtered.sort(compareCatalogDrugs);
   const pages=Math.max(1,Math.ceil(filtered.length/size));page=Math.min(page,pages);
   $('resultcount').textContent=`共 ${filtered.length} 种药品`;
   $('rows').innerHTML=filtered.slice((page-1)*size,page*size).map(r => {
@@ -93,3 +94,7 @@ $('export').onclick=()=>{
   a.href=URL.createObjectURL(blob);a.download='药品查询-USD.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 };
 diseases();render();
+
+// Shared links from the innovation guide open the existing medicine detail.
+const linkedDrugId=new URLSearchParams(location.search).get('drug');
+if(linkedDrugId && DATA.some(r=>r.drug_id===linkedDrugId)) window.addEventListener('load',()=>show(linkedDrugId),{once:true});

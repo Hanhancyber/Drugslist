@@ -1,0 +1,399 @@
+{
+  "verified": "2026-10-23",
+  "financial_year": 2025,
+  "sources": [
+    {
+      "id": "reform15",
+      "title": "国务院：2015 年药品医疗器械审评审批制度改革意见",
+      "url": "https://www.audit.gov.cn/n4/n18/c73974/content.html",
+      "date": "2015-08-18"
+    },
+    {
+      "id": "reform17",
+      "title": "国务院：2017 年深化审评审批制度改革、鼓励创新的意见",
+      "url": "https://app.www.gov.cn/govdata/gov/201710/08/413100/article.html",
+      "date": "2017-10-08"
+    },
+    {
+      "id": "nmpa25",
+      "title": "国家药监局：2025 年创新药发展与批准情况（国家医保局刊载）",
+      "url": "https://www.nhsa.gov.cn/art/2026/1/18/art_14_19392.html",
+      "date": "2026-01-18"
+    },
+    {
+      "id": "rd25",
+      "title": "三部门：2025 年全国科技经费投入统计公报，附表 1",
+      "url": "https://www.most.gov.cn/xxgk/xinxifenlei/fdzdgknr/kjtjbg/kjtj2026/202610/t20261016_197519.html",
+      "date": "2026-10-16"
+    },
+    {
+      "id": "iqvia",
+      "title": "IQVIA：Biopharma M&A — Outlook for 2026",
+      "url": "https://www.iqvia.com/locations/emea/blogs/2026/01/biopharma-m-and-a-outlook-for-2026",
+      "date": "2026-01-19"
+    },
+    {
+      "id": "citeline",
+      "title": "Citeline：Pharma R&D Annual Review 2026",
+      "url": "https://citeline.com/rd26/",
+      "date": "2026"
+    },
+    {
+      "id": "zanu",
+      "title": "FDA：泽布替尼 CLL/SLL 批准公告",
+      "url": "https://www.fda.gov/drugs/resources-information-approved-drugs/fda-approves-zanubrutinib-chronic-lymphocytic-leukemia-or-small-lymphocytic-lymphoma",
+      "date": "2023-01-19"
+    },
+    {
+      "id": "fruq",
+      "title": "FDA：呋喹替尼批准公告及 FRESCO-2 结果",
+      "url": "https://www.fda.gov/drugs/resources-information-approved-drugs/fda-approves-fruquintinib-refractory-metastatic-colorectal-cancer",
+      "date": "2023-11-08"
+    },
+    {
+      "id": "tori",
+      "title": "FDA：特瑞普利单抗批准公告及 JUPITER-02 结果",
+      "url": "https://www.fda.gov/drugs/resources-information-approved-drugs/fda-approves-toripalimab-tpzi-nasopharyngeal-carcinoma",
+      "date": "2023-10-27"
+    },
+    {
+      "id": "cilta",
+      "title": "FDA：CARVYKTI 产品信息、批准历史与现行说明书",
+      "url": "https://www.fda.gov/vaccines-blood-biologics/cellular-gene-therapy-products/carvykti",
+      "date": "核验于 2026-10-23"
+    },
+    {
+      "id": "penpu",
+      "title": "FDA：派安普利单抗批准公告",
+      "url": "https://www.fda.gov/drugs/resources-information-approved-drugs/fda-approves-penpulimab-kcqx-non-keratinizing-nasopharyngeal-carcinoma",
+      "date": "2025-04-23"
+    },
+    {
+      "id": "dalpi",
+      "title": "恒瑞：达尔西利早期乳腺癌辅助治疗适应症获批",
+      "url": "https://www.hengrui.com/media/detail-979.html",
+      "date": "2026-06-17"
+    },
+    {
+      "id": "tafo",
+      "title": "国家药监局：托莱西单抗批准公告",
+      "url": "https://english.nmpa.gov.cn/2023-08/16/c_963942.htm",
+      "date": "2023-08-16"
+    },
+    {
+      "id": "credit2",
+      "title": "BMC Medicine：CREDIT-2 随机、双盲、安慰剂对照 III 期原始研究",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9976471/",
+      "date": "2023"
+    },
+    {
+      "id": "reca",
+      "title": "恒瑞：瑞卡西单抗中国获批公告",
+      "url": "https://www.hengrui.com/media/detail-711.html",
+      "date": "2025-01-13"
+    },
+    {
+      "id": "hengrui",
+      "title": "恒瑞：2025 全年业绩",
+      "url": "https://www.hengrui.com/en/media/detail-929.html",
+      "date": "2026"
+    },
+    {
+      "id": "beone",
+      "title": "BeOne：2025 第四季度及全年业绩",
+      "url": "https://ir.beonemedicines.com/news/beone-medicines-announces-fourth-quarter-and-full-year-2025-financial-results-highlighting-global-success-of/6559b41c-7beb-45ca-bc76-5e1c9cdb26cc",
+      "date": "2026"
+    },
+    {
+      "id": "hutch",
+      "title": "和黄医药：2025 全年业绩",
+      "url": "https://www.hutch-med.com/2025-full-year-results/",
+      "date": "2026"
+    },
+    {
+      "id": "legend",
+      "title": "传奇生物：2025 全年业绩",
+      "url": "https://investors.legendbiotech.com/node/9431/pdf",
+      "date": "2026-03"
+    },
+    {
+      "id": "akeso",
+      "title": "康方生物：2025 全年业绩",
+      "url": "https://www.akesobio.com/en/media/akeso-news/260327/",
+      "date": "2026-03-27"
+    },
+    {
+      "id": "innovent",
+      "title": "信达生物发布：2025 全年业绩及业务进展",
+      "url": "https://www.prnewswire.com/news-releases/innovent-announces-2025-annual-results-and-business-updates-302725990.html",
+      "date": "2026"
+    },
+    {
+      "id": "crl",
+      "title": "恒瑞：卡瑞利珠单抗联合方案收到 FDA 完整回复函",
+      "url": "https://www.hengrui.com/en/media/detail-990.html",
+      "date": "2026-07-13"
+    },
+    {
+      "id": "eutori",
+      "title": "欧盟药品注册簿：LOQTORZI 的已批准适应症",
+      "url": "https://ec.europa.eu/health/documents/community-register/html/h1853.htm",
+      "date": "核验于 2026-10-23"
+    }
+  ],
+  "drugs": [
+    {
+      "name": "泽布替尼",
+      "english": "Zanubrutinib · BRUKINSA / 百悦泽",
+      "field": "肿瘤",
+      "company": "百济神州 / BeOne",
+      "mechanism": "BTK 抑制剂",
+      "id": "DL-4E01135DC8",
+      "status": "美国已获批",
+      "intro": "中国研发的血液肿瘤靶向药，已在美国实现大规模商业销售。",
+      "use": "以 FDA 2023 年批准为例：用于慢性淋巴细胞白血病（CLL）或小淋巴细胞淋巴瘤（SLL）。",
+      "evidence": "批准依据包括 SEQUOIA 与 ALPINE 随机对照研究，具体适用人群与风险见监管资料。",
+      "signal": "39.0 亿 USD",
+      "signalLabel": "2025 年全球产品销售；美国约 28.0 亿 USD",
+      "refs": [
+        "zanu",
+        "beone"
+      ]
+    },
+    {
+      "name": "西达基奥仑赛",
+      "english": "Ciltacabtagene autoleucel · CARVYKTI",
+      "field": "肿瘤",
+      "company": "传奇生物 × Janssen",
+      "mechanism": "BCMA CAR-T 细胞疗法",
+      "id": "DL-95372CF593",
+      "status": "美国已获批",
+      "intro": "起源于中国研发，并通过国际合作开发和商业化的细胞治疗。",
+      "use": "FDA 适应症：成人复发或难治多发性骨髓瘤，既往至少接受一线治疗（包括蛋白酶体抑制剂与免疫调节剂），且来那度胺难治。",
+      "evidence": "需由具备条件的医疗团队评估与实施；FDA 说明书包含严重不良反应的黑框警告。",
+      "signal": "约 19.0 亿 USD",
+      "signalLabel": "2025 年全球净贸易销售；不同于传奇公司收入",
+      "refs": [
+        "cilta",
+        "legend"
+      ]
+    },
+    {
+      "name": "呋喹替尼",
+      "english": "Fruquintinib · FRUZAQLA / 爱优特",
+      "field": "肿瘤",
+      "company": "和黄医药 × 武田",
+      "mechanism": "VEGFR 1/2/3 抑制剂",
+      "id": "DL-42482FD7C9",
+      "status": "美国已获批",
+      "intro": "中国发现的口服靶向药，海外由武田商业化。",
+      "use": "FDA 2023 年批准用于既往接受氟嘧啶、奥沙利铂、伊立替康及抗 VEGF 治疗等的成人转移性结直肠癌；RAS 野生型还需符合相应抗 EGFR 治疗条件。",
+      "evidence": "FRESCO-2 中，呋喹替尼 + 最佳支持治疗的中位总生存期为 7.4 个月，安慰剂 + 最佳支持治疗为 4.8 个月。",
+      "signal": "3.7 亿 USD",
+      "signalLabel": "2025 年中国以外市场销售（武田）；原值 USD 366.2m",
+      "refs": [
+        "fruq",
+        "hutch"
+      ]
+    },
+    {
+      "name": "特瑞普利单抗",
+      "english": "Toripalimab · LOQTORZI / 拓益",
+      "field": "肿瘤",
+      "company": "君实生物",
+      "mechanism": "PD-1 单克隆抗体",
+      "id": "DL-4ABB2607D4",
+      "status": "美国 / 欧盟已获批",
+      "intro": "以鼻咽癌为代表的临床证据推动中国免疫治疗走向国际。",
+      "use": "美国获批包括联合顺铂和吉西他滨一线治疗成人转移性或复发局部晚期鼻咽癌，以及特定含铂化疗后患者的单药治疗。欧盟批准范围另见原文。",
+      "evidence": "FDA 公布的 JUPITER-02 分析：联合方案中位无进展生存期 11.7 个月，对照化疗方案 8.0 个月；限对应研究人群。",
+      "signal": "2023 / 2024",
+      "signalLabel": "美国 / 欧盟首次批准年份",
+      "refs": [
+        "tori",
+        "eutori"
+      ]
+    },
+    {
+      "name": "派安普利单抗",
+      "english": "Penpulimab · 安尼可",
+      "field": "肿瘤",
+      "company": "康方生物",
+      "mechanism": "PD-1 单克隆抗体",
+      "id": null,
+      "status": "美国已获批",
+      "intro": "中国自主研发抗体的另一项明确海外监管认可。",
+      "use": "FDA 2025 年批准联合铂类和吉西他滨用于成人复发或转移性非角化性鼻咽癌一线治疗，也批准符合既往治疗条件的单药用途。",
+      "evidence": "AK105-304 中位无进展生存期为 9.6 个月，对照组 7.0 个月；两组均使用相应化疗。不能与其他试验数字直接比较药物优劣。",
+      "signal": "2025.04",
+      "signalLabel": "美国批准用于特定非角化性鼻咽癌人群",
+      "refs": [
+        "penpu",
+        "akeso"
+      ]
+    },
+    {
+      "name": "达尔西利",
+      "english": "Dalpiciclib · 艾瑞康",
+      "field": "肿瘤",
+      "company": "恒瑞医药",
+      "mechanism": "CDK4/6 抑制剂",
+      "id": "DL-CC45436182",
+      "status": "中国已获批",
+      "intro": "国内乳腺癌创新药从晚期治疗继续拓展到早期辅助治疗。",
+      "use": "2026 年 6 月新增中国适应症：联合内分泌治疗，用于 HR 阳性、HER2 阴性且复发风险高的早期乳腺癌患者辅助治疗。",
+      "evidence": "该进展基于 DAWNA-A III 期研究，体现了从晚期治疗向早期辅助治疗的拓展。此处对应中国批准范围。",
+      "signal": "2026.06",
+      "signalLabel": "新增早期乳腺癌辅助治疗适应症",
+      "refs": [
+        "dalpi"
+      ]
+    },
+    {
+      "name": "托莱西单抗",
+      "english": "Tafolecimab · 信必乐",
+      "field": "心血管",
+      "company": "信达生物",
+      "mechanism": "PCSK9 抑制剂",
+      "id": "DL-BD10B6B4F3",
+      "status": "中国已获批",
+      "intro": "中国创新正在拓展到血脂管理与长期慢病治疗。",
+      "use": "与他汀等联合，用于中等或以上剂量他汀治疗后 LDL-C 仍未达标的成人原发性高胆固醇血症或混合型血脂异常。",
+      "evidence": "CREDIT-2 在中国杂合子型家族性高胆固醇血症患者中验证了降 LDL-C 效果。降脂指标不等于已经证实心梗或死亡风险下降。",
+      "signal": "III 期",
+      "signalLabel": "中国已获批；CREDIT-2 提供随机对照降脂证据",
+      "refs": [
+        "tafo",
+        "credit2"
+      ]
+    },
+    {
+      "name": "瑞卡西单抗",
+      "english": "Recaticimab · 艾心安",
+      "field": "心血管",
+      "company": "恒瑞医药",
+      "mechanism": "PCSK9 单克隆抗体",
+      "id": "DL-4A017180E7",
+      "status": "中国已获批",
+      "intro": "在国产降脂抗体中探索更长给药间隔。",
+      "use": "中国批准用途包括他汀治疗未达标的特定高胆固醇血症或混合型血脂异常成人患者，也包括符合条件患者的单药治疗。",
+      "evidence": "中国批准基于 REMAIN 系列 III 期研究，包含每 4 周或每 8 周一次的方案；具体使用须按说明书和医生评估。",
+      "signal": "2025.01",
+      "signalLabel": "中国批准公告；长间隔降脂治疗的新选择",
+      "refs": [
+        "reca"
+      ]
+    }
+  ],
+  "companies": [
+    {
+      "name": "恒瑞医药",
+      "en": "Hengrui Pharmaceuticals",
+      "focus": "综合创新药研发",
+      "amount": 31630000000,
+      "currency": "CNY",
+      "basis": "2025 年总收入",
+      "highlights": [
+        "创新药销售人民币 163.4 亿元，占总收入约 51.7%。",
+        "研发投入人民币 87.2 亿元；费用化研发人民币 69.6 亿元，二者口径不同。"
+      ],
+      "products": "达尔西利、卡瑞利珠单抗、瑞卡西单抗",
+      "global": "国际合作和海外研发持续推进。卡瑞利珠单抗联合方案于 2026 年 7 月仍收到 FDA 完整回复函，不能标为美国已获批。",
+      "refs": [
+        "hengrui",
+        "crl"
+      ]
+    },
+    {
+      "name": "百济神州 / BeOne",
+      "en": "BeOne Medicines",
+      "focus": "全球血液肿瘤商业化",
+      "amount": 5343000000,
+      "currency": "USD",
+      "basis": "2025 年总收入",
+      "highlights": [
+        "百悦泽全球销售约 39.0 亿 USD，其中美国约 28.0 亿 USD。",
+        "2025 年 GAAP 研发费用约 21.5 亿 USD。"
+      ],
+      "products": "泽布替尼（百悦泽）、替雷利珠单抗（百泽安）",
+      "global": "泽布替尼具备美国监管批准和规模销售。其全球开发与商业化网络将中国研发的血液肿瘤药带入国际市场。",
+      "refs": [
+        "beone",
+        "zanu"
+      ]
+    },
+    {
+      "name": "信达生物",
+      "en": "Innovent Biologics",
+      "focus": "肿瘤与慢病产品组合",
+      "amount": 13000000000,
+      "currency": "CNY",
+      "approx": true,
+      "basis": "2025 年总收入",
+      "highlights": [
+        "产品收入约人民币 119.0 亿元，同比增长 44.6%。",
+        "产品组合同时包含自主研发与引进品种。"
+      ],
+      "products": "信迪利单抗、托莱西单抗等",
+      "global": "产品组合覆盖肿瘤免疫治疗与血脂管理。托莱西单抗已有中国批准与 III 期证据；各品种的研发来源和批准市场分别披露。",
+      "refs": [
+        "innovent",
+        "tafo"
+      ]
+    },
+    {
+      "name": "传奇生物",
+      "en": "Legend Biotech",
+      "focus": "细胞治疗全球合作",
+      "amount": 1028900000,
+      "currency": "USD",
+      "basis": "2025 年总收入",
+      "highlights": [
+        "公司合作收入约 9.4 亿 USD；总收入原值 USD 1,028.9m。",
+        "CARVYKTI 全球净贸易销售约 19.0 亿 USD，不是传奇单独确认的产品收入。"
+      ],
+      "products": "西达基奥仑赛（CARVYKTI）",
+      "global": "与 Janssen 合作开发和商业化；2026 年 3 月披露已覆盖 14 个市场、294 家治疗中心。",
+      "refs": [
+        "legend",
+        "cilta"
+      ]
+    },
+    {
+      "name": "和黄医药",
+      "en": "HUTCHMED",
+      "focus": "小分子靶向药出海",
+      "amount": 548500000,
+      "currency": "USD",
+      "basis": "2025 年总收入",
+      "highlights": [
+        "肿瘤 / 免疫业务收入约 2.9 亿 USD；研发费用约 1.5 亿 USD。",
+        "FRUZAQLA 海外市场销售约 3.7 亿 USD，和黄确认的相关收入约 0.9 亿 USD。"
+      ],
+      "products": "呋喹替尼、索凡替尼、赛沃替尼",
+      "global": "呋喹替尼由武田在中国以外商业化。合作方市场销售与和黄财报收入分别展示。",
+      "refs": [
+        "hutch",
+        "fruq"
+      ]
+    },
+    {
+      "name": "康方生物",
+      "en": "Akeso",
+      "focus": "双抗与免疫治疗",
+      "amount": 3033100000,
+      "currency": "CNY",
+      "basis": "2025 年商业销售收入",
+      "highlights": [
+        "商业销售收入人民币 30.331 亿元，同比增长 51.48%。",
+        "该数字是商业销售收入，不能与其他公司的总收入直接作规模排名。"
+      ],
+      "products": "依沃西单抗、卡度尼利单抗、派安普利单抗",
+      "global": "派安普利单抗于 2025 年获得美国 FDA 批准；依沃西单抗与卡度尼利单抗构成其双抗产品布局。",
+      "refs": [
+        "akeso",
+        "penpu"
+      ]
+    }
+  ]
+}

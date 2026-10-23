@@ -30,6 +30,6 @@ for key, value in [('DATA', drugs), ('PRICES', prices), ('FX', exchange),
     template = template.replace('__' + key + '__', json.dumps(value, ensure_ascii=False).replace('<', '\\u003c'))
 (ROOT / 'outputs/Drugs-List.html').write_text(template)
 index = template.replace('../assets/', 'assets/').replace('../data/', 'data/')
-index = index.replace('../DATA_NOTES.md', 'DATA_NOTES.md').replace('href="Drugs-List.md"', 'href="outputs/Drugs-List.md"')
+index = index.replace('../innovation.html', 'innovation.html').replace('../DATA_NOTES.md', 'DATA_NOTES.md').replace('href="Drugs-List.md"', 'href="outputs/Drugs-List.md"')
 (ROOT / 'index.html').write_text(index)
 print('Built index.html and outputs/Drugs-List.html')

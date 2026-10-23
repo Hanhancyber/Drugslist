@@ -8,6 +8,9 @@
 
 ## 在线功能
 
+- 新增 [中国创新药专题](innovation.html)：行业进展、8 个代表药品和 6 家药企，附 23 项原始来源；2025 年财务金额统一折算为 USD。
+- 默认浏览顺序优先展示编辑选取的代表药品，中成药在全部领域及各治疗领域后排。排序不表示销量、疗效或用药推荐等级；代表清单在 `assets/catalog-order.js`。
+
 - 按药名、治疗领域、疾病、药物类别、创新属性、年份和医保搜索筛选，查看逐药详情及来源，导出 CSV。
 - 页面金额统一按欧洲央行2026年10月22日参考汇率折算为 USD，保留一位小数。原始报价、计价单位和来源保留；币种不明的记录暂不折算。
 - 药物类别和创新属性分别标示，历史新药按原批准口径展示，不能据国内企业身份推定仿制或原研。
@@ -39,7 +42,10 @@ node --test tests/community.test.mjs
 
 ```sh
 python3 scripts/build_site.py
+python3 scripts/build_innovation.py
 ```
+
+创新药专题的内容和来源保存在 `data/innovation.json`，结构模板为 `scripts/innovation-template.html`。
 
 前端修改后还需运行 `python3 member-service/scripts/sync-catalog.py` 同步会员站点的公开目录快照，通过 Sites 流程部署会员服务；其项目身份见 `member-service/.openai/hosting.json`。
 
