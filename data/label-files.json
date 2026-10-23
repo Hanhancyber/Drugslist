@@ -130,16 +130,6 @@
     "版本日期": "2026-05-06后官网版；末次修改日期有XXXX占位，具体日期待补"
   },
   {
-    "filename": "DL-69F6A8E566-1-1.pdf",
-    "drug_id": "DL-69F6A8E566",
-    "药品名称": "益气通窍丸",
-    "bytes": 3391664,
-    "sha256": "a99c4abf145094cdc96e97c66395a8cf15f0ade22c22dd7ef86c534962a6d817",
-    "url": "https://github.com/Hanhancyber/Drugslist/releases/download/labels-2026-10-23/DL-69F6A8E566-1-1.pdf",
-    "官网来源": "https://www.schairong.com/uploadfile/202606/d5ec89510b20d02.pdf",
-    "版本日期": "2026-04-10"
-  },
-  {
     "filename": "DL-4F6BFC1FC9-1-1.pdf",
     "drug_id": "DL-4F6BFC1FC9",
     "药品名称": "枸橼酸倍维巴肽注射液",
