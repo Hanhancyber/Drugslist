@@ -12,6 +12,8 @@ def classify(drug):
         attribute = '仿制药'
     elif '改良型' in raw:
         attribute = '改良型新药'
+    elif '创新药/历史新药' in raw:
+        attribute = '待核实'
     elif '历史' in raw:
         attribute = '历史新药'
     elif '创新药' in raw or raw in ('化学药1类', '中药1.1类', '中药1.2类'):

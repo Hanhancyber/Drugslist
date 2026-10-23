@@ -30,6 +30,7 @@ class DisplayData(unittest.TestCase):
         new=classify({'药品类型':'中药','注册创新类别':'中药1.2类'})
         self.assertEqual((new['药物类别'],new['创新属性']),('中成药','创新药'))
         self.assertEqual(classify({'药品类型':'化学药品','注册创新类别':'历史化学药1类'})['创新属性'],'历史新药')
+        self.assertEqual(classify({'药品类型':'化学药品','注册创新类别':'报告明确创新药/历史新药；历史类别见证据'})['创新属性'],'待核实')
         self.assertEqual(classify({'药品类型':'化学药品','注册创新类别':'4类仿制药'})['创新属性'],'仿制药')
         self.assertEqual(classify({'药品类型':'治疗用生物制品','注册创新类别':'生物类似药'})['创新属性'],'生物类似药')
 

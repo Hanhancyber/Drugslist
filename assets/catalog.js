@@ -63,7 +63,7 @@ function show(id) {
   $('drugtitle').textContent=r['中文通用名'];$('drugsubtitle').textContent=[r['英文通用名'],r['商品名']].filter(Boolean).join(' · ');
   let s='<h3>药品信息</h3><dl class="grid">';
   for (const k of ['药物类别','创新属性','治疗大类','疾病小类','企业/上市许可持有人','机制/靶点','首次中国获批年份','国内上市状态','海外上市状态']) s+=pair(k,r[k]);
-  s+='</dl><details class="classification-note"><summary>药品分类依据</summary><p>'+E(r['分类依据'])+'</p><p>药物类别与创新属性是两个维度，可同时成立。“历史新药”按批准当时口径标示，不等同于现行1类创新药。</p></details>'+labelSection(r)+'<h3>医保目录</h3><dl class="grid">';
+  s+='</dl><details class="classification-note"><summary>药品分类依据</summary><p>'+E(r['分类依据'])+'</p><p>药物类别与创新属性是两个维度，可同时成立。“历史新药”按批准当时口径标示，不等同于现行1类创新药。原始资料尚未明确区分创新属性时显示“待核实”。</p></details>'+labelSection(r)+'<h3>医保目录</h3><dl class="grid">';
   for (const k of ['医保状态','医保目录版本','医保限定支付范围','医保协议期','医保核查方法','医保来源定位']) s+=pair(k,r[k]);
   s+='</dl><h3>公开价格（USD）</h3><p class="sub">价格按原规格与计价单位展示，不等于个人自付费用。不同地区、日期和折扣条件的报价不能直接视为实际价差。</p>';
   s+=ps.length?ps.map(priceCard).join(''):'<p>暂无可核验的公开价格。</p>';
