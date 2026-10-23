@@ -1,6 +1,6 @@
 # Drugslist
 
-中国创新药资料、适应症、官方说明书和公开价格的可追溯研究清单。
+面向患者的药品查询网站，提供适应症、官方说明书、国家医保信息和可追溯公开价格。
 
 **网站： https://hanhancyber.github.io/Drugslist/**
 
@@ -8,7 +8,9 @@
 
 ## 在线功能
 
-- 按药名、疾病、年份、医保和价格覆盖搜索筛选，查看逐药详情及来源，导出 CSV。
+- 按药名、治疗领域、疾病、药物类别、创新属性、年份、医保和价格覆盖搜索筛选，查看逐药详情及来源，导出 CSV。
+- 页面金额统一按欧洲央行2026年10月22日参考汇率折算为 USD，保留一位小数。原始报价、计价单位和来源保留；币种不明的记录暂不折算。
+- 药物类别和创新属性分别标示，历史新药按原批准口径展示，不能据国内企业身份推定仿制或原研。
 - 完整说明书副本从 [版本附件](https://github.com/Hanhancyber/Drugslist/releases/tag/labels-2026-10-23) 下载；同时保留机构官网原件链接。
 - AI 问答预留区，可把输入内容转为药品搜索；模型尚未接入。
 - GitHub Pages 为静态站点，线上会员注册与评价暂未开放。仓库包含可本地运行的注册、登录、评价、举报和管理员处理后端。
@@ -30,7 +32,7 @@ python3 scripts/review_admin.py --help
 
 ## 更新与部署
 
-编辑 `data/` 中的公开数据或 `scripts/viewer-template.html` / `assets/`，然后运行：
+编辑 `data/` 中的公开数据（金额与币种字段保留原始报价）或 `scripts/viewer-template.html` / `assets/`，然后运行：
 
 ```sh
 python3 scripts/build_site.py

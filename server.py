@@ -289,8 +289,9 @@ class Handler(BaseHTTPRequestHandler):
             path = '/outputs/Drugs-List.html'
         relative = Path(unquote(path).lstrip('/'))
         allowed_data = {'drugs.json', 'drugs.csv', 'prices.csv', 'prices.json', 'indications.csv', 'sources.csv',
-                        'coverage-by-year.csv', 'field-completeness.csv', 'statistics.json', 'label-gaps.csv'}
-        allowed = (relative.parts and relative.parts[0] in {'outputs', 'assets'}) or str(relative) == 'README.md' or (
+                        'coverage-by-year.csv', 'field-completeness.csv', 'statistics.json', 'label-gaps.csv',
+                        'exchange-rates.json', 'exchange-rates-source.xml', 'label-files.json'}
+        allowed = (relative.parts and relative.parts[0] in {'outputs', 'assets'}) or str(relative) in {'README.md', 'DATA_NOTES.md'} or (
             len(relative.parts) == 2 and relative.parts[0] == 'data' and relative.name in allowed_data)
         file = (ROOT / relative).resolve()
         if not allowed or not file.is_relative_to(ROOT) or not file.is_file() or any(p.startswith('.') for p in relative.parts):

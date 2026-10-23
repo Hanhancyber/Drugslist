@@ -122,7 +122,7 @@
     if (!query) { $('aiQuestion').focus(); return; }
     const namedDrug = DATA.map(r => r['中文通用名'].replace(/^(注射用|盐酸|甲磺酸|甲苯磺酸|羟乙磺酸|氢溴酸|枸橼酸|脯氨酸|富马酸|苯磺酸|磷酸|苹果酸|苯甲酸|酒石酸|硫酸|己二酸)/, '').replace(/(注射用浓溶液|缓释片|肠溶胶囊|肠溶片|软胶囊|胶囊|注射液|片)$/, '')).filter(name => name.length >= 3 && query.includes(name)).sort((a, b) => b.length - a.length)[0];
     const searchTerm = namedDrug || query;
-    ['year', 'insurance', 'price', 'disease'].forEach(k => $(k).value = '');
+    ['year', 'insurance', 'price', 'disease', 'drugKind', 'innovation'].forEach(k => $(k).value = '');
     $('search').value = searchTerm; $('scope').value = 'all'; major = ''; page = 1; diseases(); render();
     $('search').scrollIntoView({behavior: 'smooth', block: 'center'});
     $('aiStatus').textContent = `已用“${searchTerm}”检索药品资料。AI问答将在接入模型后开放。`;
